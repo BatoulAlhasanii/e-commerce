@@ -1,0 +1,5 @@
+services/*/node_modules
+services/*/dist
+infra/k8s/*/*-secret.yaml
+.devspace
+.idea

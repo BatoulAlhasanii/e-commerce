@@ -1,0 +1,8 @@
+resources:
+  - ./k8s/ingress-srv.yaml
+  - ./k8s/user-pgadmin-depl.yaml
+  - ./k8s/user/user-config.yaml
+  - ./k8s/user/user-depl.yaml
+  - ./k8s/user/user-postgres-depl.yaml
+  - ./k8s/user/user-postgres-pv.yaml
+  - ./k8s/user/user-secret.yaml

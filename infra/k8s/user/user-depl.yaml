@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+        - name: user
+          image: e-commerce/user
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-secret
+                  key: db-password
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: node-env
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: db-type
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: db-port
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: db-username
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: db-name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-srv
+spec:
+  selector:
+    app: user
+  ports:
+    - name: user
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
