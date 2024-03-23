@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-pgadmin-depl
+  name: pgadmin-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-pgadmin
+      app: pgadmin
   template:
     metadata:
       labels:
-        app: user-pgadmin
+        app: pgadmin
     spec:
       containers:
-        - name: user-pgadmin
+        - name: pgadmin
           image: dpage/pgadmin4
           ports:
             - containerPort: 80
@@ -32,13 +32,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-pgadmin-srv
+  name: pgadmin-srv
 spec:
   type: NodePort
   selector:
-    app: user-pgadmin
+    app: pgadmin
   ports:
-    - name: user-pgadmin
+    - name: pgadmin
       protocol: TCP
       port: 80
       targetPort: 80

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-depl
+  name: product-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user
+      app: product
   template:
     metadata:
       labels:
-        app: user
+        app: product
     spec:
       containers:
-        - name: user
-          image: e-commerce/user
+        - name: product
+          image: e-commerce/product
           ports:
             - containerPort: 3000
           env:
@@ -26,32 +26,32 @@ spec:
             - name: DB_TYPE
               valueFrom:
                 configMapKeyRef:
-                  name: user-config
+                  name: product-config
                   key: db-type
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: user-config
+                  name: product-config
                   key: db-host
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: user-config
+                  name: product-config
                   key: db-port
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: user-config
+                  name: product-config
                   key: db-username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: user-secret
+                  name: product-secret
                   key: db-password
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: user-config
+                  name: product-config
                   key: db-name
             - name: JWT_KEY
               valueFrom:
@@ -67,12 +67,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-srv
+  name: product-srv
 spec:
   selector:
-    app: user
+    app: product
   ports:
-    - name: user
+    - name: product
       protocol: TCP
       port: 3000
       targetPort: 3000

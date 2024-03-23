@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: user-config
+  name: product-config
 data:
   db-type: postgres
-  db-host: user-postgres-srv
+  db-host: product-postgres-srv
   db-port: '5432'
   db-username: root
-  db-name: user
+  db-name: product
