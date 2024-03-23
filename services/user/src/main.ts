@@ -21,6 +21,8 @@ function validateEnvVariables() {
     'DB_USERNAME',
     'DB_PASSWORD',
     'DB_NAME',
+    'JWT_KEY',
+    'JWT_TTL',
   ];
 
   for (const envVar of requiredEnvVariables) {

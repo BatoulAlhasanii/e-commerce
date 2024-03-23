@@ -12,6 +12,7 @@ const typeOrmConfig: DataSourceOptions = {
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   entities: [__dirname + '/../../**/**/*.entity.{ts,js}'],
   synchronize: true,
+  dropSchema: true,
   logging: true,
   logger: 'advanced-console',
   extra: {

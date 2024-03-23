@@ -9,3 +9,4 @@ data:
   db-port: '5432'
   db-username: root
   db-name: user
+  jwt-ttl: '43200'

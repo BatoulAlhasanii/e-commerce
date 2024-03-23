@@ -53,6 +53,16 @@ spec:
                 configMapKeyRef:
                   name: user-config
                   key: db-name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: user-secret
+                  key: jwt-key
+            - name: JWT_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: jwt-ttl
 ---
 apiVersion: v1
 kind: Service
