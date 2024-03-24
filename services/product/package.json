@@ -17,7 +17,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed2": "node -r tsconfig-paths/register -r ts-node/register src/database/seeder/seed.ts",
+    "seed": "node -r tsconfig-paths/register -r ts-node/register src/database/seeder/seed.ts",
     "typeorm": "node -r tsconfig-paths/register -r ts-node/register ./node_modules/.bin/typeorm",
     "migration:generate": "node -r tsconfig-paths/register -r ts-node/register ./node_modules/.bin/typeorm migration:generate src/database/migrations/migration -d src/database/typeorm/data-source.ts",
     "migration:create": "node -r tsconfig-paths/register -r ts-node/register ./node_modules/.bin/typeorm migration:create src/database/migrations/migration",

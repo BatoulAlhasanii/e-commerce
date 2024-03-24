@@ -6,6 +6,8 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/exception/http-exception.filter';
+import { ProductModule } from './product/product.module';
+import { AuthModule } from '@/auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { HttpExceptionFilter } from '@/exception/http-exception.filter';
       load: [() => config],
     }),
     DatabaseModule,
+    AuthModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [
