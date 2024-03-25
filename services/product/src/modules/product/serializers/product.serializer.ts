@@ -1,5 +1,5 @@
 import { EntitySerializer } from '@/utils/entity-serializer';
-import { Product } from '@/product/entities/product.entity';
+import { Product } from '@/modules/product/entities/product.entity';
 
 export class ProductSerializer extends EntitySerializer<Product> {
   id: string;

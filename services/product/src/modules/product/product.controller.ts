@@ -9,16 +9,16 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { AuthUser } from '@/auth/decorators/auth-user.decorator';
-import { AuthUserPayload } from '@/auth/types';
+import { ProductService } from '@/modules/product/product.service';
+import { CreateProductDto } from '@/modules/product/dto/create-product.dto';
+import { UpdateProductDto } from '@/modules/product/dto/update-product.dto';
+import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
+import { AuthUserPayload } from '@/modules/auth/types';
 import { ApiResponse, responseSuccess } from '@/utils/api-response';
-import { Product } from '@/product/entities/product.entity';
-import { ProductSerializer } from '@/product/serializers/product.serializer';
-import { HasRole } from '@/auth/decorators/has-role.decorator';
-import { UserRole } from '@/auth/enums/user-role.enum';
+import { Product } from '@/modules/product/entities/product.entity';
+import { ProductSerializer } from '@/modules/product/serializers/product.serializer';
+import { HasRole } from '@/modules/auth/decorators/has-role.decorator';
+import { UserRole } from '@/modules/auth/enums/user-role.enum';
 
 @Controller('products')
 export class ProductController {

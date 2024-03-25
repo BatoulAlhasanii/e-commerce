@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Factory } from '@/database/factories/factory';
-import { ProductRepository } from '@/product/repositories/product.repository';
+import { ProductRepository } from '@/modules/product/repositories/product.repository';
 import { productDefinition } from '@/database/factories/product.factory';
 
 @Injectable()

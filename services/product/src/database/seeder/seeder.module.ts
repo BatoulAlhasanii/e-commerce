@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@/database/database.module';
 import { config } from '@/config';
 import { TypeOrmModule } from '@/database/typeorm/typeorm.module';
-import { ProductRepository } from '@/product/repositories/product.repository';
+import { ProductRepository } from '@/modules/product/repositories/product.repository';
 import { ProductSeeder } from '@/database/seeder/product.seeder';
 
 @Module({

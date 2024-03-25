@@ -1,13 +1,13 @@
 import * as request from 'supertest';
 import { AppFactory } from './factories/app';
-import { ProductRepository } from '@/product/repositories/product.repository';
-import { Product } from '@/product/entities/product.entity';
+import { ProductRepository } from '@/modules/product/repositories/product.repository';
+import { Product } from '@/modules/product/entities/product.entity';
 import { Factory } from '@/database/factories/factory';
 import { productDefinition } from '@/database/factories/product.factory';
 import { JwtService } from '@nestjs/jwt';
 import { faker } from '@faker-js/faker';
-import { AuthUserPayload } from '@/auth/types';
-import { UserRole } from '@/auth/enums/user-role.enum';
+import { AuthUserPayload } from '@/modules/auth/types';
+import { UserRole } from '@/modules/auth/enums/user-role.enum';
 
 describe('ProductController (e2e)', () => {
   let app: AppFactory;

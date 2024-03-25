@@ -1,5 +1,5 @@
 import { DeepPartial } from 'typeorm/common/DeepPartial';
-import { Product } from '@/product/entities/product.entity';
+import { Product } from '@/modules/product/entities/product.entity';
 import { faker } from '@faker-js/faker';
 
 export const productDefinition = (): DeepPartial<Product> => {
