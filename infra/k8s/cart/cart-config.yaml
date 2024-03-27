@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+data:
+  redis-host: product-postgres-srv
+  redis-port: '5432'

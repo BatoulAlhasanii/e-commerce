@@ -1,6 +1,6 @@
 resources:
-  - ./k8s/common-config.yaml
-  - ./k8s/common-secret.yaml
+  - ./k8s/common/common-config.yaml
+  - ./k8s/common/common-secret.yaml
   - ./k8s/ingress-srv.yaml
   - ./k8s/pgadmin-depl.yaml
   - ./k8s/user/user-config.yaml
@@ -13,5 +13,9 @@ resources:
   - ./k8s/product/product-postgres-depl.yaml
   - ./k8s/product/product-postgres-pv.yaml
   - ./k8s/product/product-secret.yaml
-#  - ./k8s/kafka/kafka-depl.yaml
+  - ./k8s/kafka/kafka-depl.yaml
   - ./k8s/kafka/zookeper-depl.yaml
+  - ./k8s/cart/cart-config.yaml
+  - ./k8s/cart/cart-depl.yaml
+  - ./k8s/cart/cart-redis-depl.yaml
+  - ./k8s/cart/cart-redis-pvc.yaml

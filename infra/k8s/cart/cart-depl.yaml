@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product-depl
+  name: cart-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: product
+      app: cart
   template:
     metadata:
       labels:
-        app: product
+        app: cart
     spec:
       containers:
-        - name: product
-          image: e-commerce/product
+        - name: cart
+          image: e-commerce/cart
           ports:
             - containerPort: 3000
           env:
@@ -23,36 +23,16 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: node-env
-            - name: DB_TYPE
+            - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: product-config
-                  key: db-type
-            - name: DB_HOST
+                  name: cart-config
+                  key: redis-host
+            - name: REDIS_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: product-config
-                  key: db-host
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: product-config
-                  key: db-port
-            - name: DB_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: product-config
-                  key: db-username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: product-secret
-                  key: db-password
-            - name: DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: product-config
-                  key: db-name
+                  name: cart-config
+                  key: redis-port
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -77,12 +57,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: product-srv
+  name: cart-srv
 spec:
   selector:
-    app: product
+    app: cart
   ports:
-    - name: product
+    - name: cart
       protocol: TCP
       port: 3000
       targetPort: 3000

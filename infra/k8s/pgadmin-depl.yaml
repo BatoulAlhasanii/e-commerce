@@ -19,7 +19,7 @@ spec:
             - containerPort: 80
           volumeMounts:
             - name: pgadmin-data
-              mountPath: /data/pgadmin
+              mountPath: /var/lib/pgadmin
           env:
             - name: PGADMIN_DEFAULT_EMAIL
               value: admin@admin.com

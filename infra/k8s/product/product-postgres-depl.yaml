@@ -19,7 +19,7 @@ spec:
             - containerPort: 5432
           volumeMounts:
             - name: product-postgres-data
-              mountPath: /data/product/db
+              mountPath: /var/lib/postgresql/data
           env:
             - name: POSTGRES_DB
               valueFrom:

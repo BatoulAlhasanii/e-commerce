@@ -5,3 +5,5 @@ metadata:
 data:
   node-env: development
   jwt-ttl: '43200'
+  kafka-client-id: e-commerce
+  kafka-broker: 'kafka-srv:9092'
