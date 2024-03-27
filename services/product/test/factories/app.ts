@@ -1,8 +1,10 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
-import { AppModule } from '../../src/app.module';
 import { ValidationException } from '@/exception/validation.exception';
+import { MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
+import { MockKafkaWrapper } from '@/modules/message-broker/mocks/mock-kafka-wrapper';
+import { AppModule } from '@/app.module';
 
 export class AppFactory {
   private constructor(
@@ -17,7 +19,9 @@ export class AppFactory {
   static async new(): Promise<AppFactory> {
     const moduleBuilder: TestingModuleBuilder = await Test.createTestingModule({
       imports: [AppModule],
-    });
+    })
+      .overrideProvider(MESSAGE_BROKER)
+      .useClass(MockKafkaWrapper);
 
     const module: TestingModule = await moduleBuilder.compile();
 

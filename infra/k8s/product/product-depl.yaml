@@ -63,6 +63,16 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: jwt-ttl
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: product-config
+                  key: kafka-client-id
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: product-config
+                  key: kafka-broker
 ---
 apiVersion: v1
 kind: Service

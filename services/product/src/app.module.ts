@@ -8,6 +8,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/exception/http-exception.filter';
 import { ProductModule } from '@/modules/product/product.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { MessageBrokerModule } from '@/modules/message-broker/message-broker.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from '@/modules/auth/auth.module';
       load: [() => config],
     }),
     DatabaseModule,
+    MessageBrokerModule,
     AuthModule,
     ProductModule,
   ],

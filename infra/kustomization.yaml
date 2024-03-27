@@ -13,3 +13,5 @@ resources:
   - ./k8s/product/product-postgres-depl.yaml
   - ./k8s/product/product-postgres-pv.yaml
   - ./k8s/product/product-secret.yaml
+#  - ./k8s/kafka/kafka-depl.yaml
+  - ./k8s/kafka/zookeper-depl.yaml

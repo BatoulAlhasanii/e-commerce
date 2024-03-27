@@ -8,3 +8,5 @@ data:
   db-port: '5432'
   db-username: root
   db-name: product
+  kafka-client-id: e-commerce
+  kafka-broker: 'kafka-srv:9092'
