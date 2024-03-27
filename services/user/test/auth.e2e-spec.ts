@@ -28,8 +28,8 @@ describe('AuthController (e2e)', () => {
 
     const response = await request(app.instance.getHttpServer())
       .post('/users/auth/register')
-      .send(payload);
-    console.log('response', response.body);
+      .send(payload)
+      .expect(201);
 
     const { password, ...userInfo } = response.body.data.user;
 
