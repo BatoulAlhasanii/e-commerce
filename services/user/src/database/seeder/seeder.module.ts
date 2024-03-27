@@ -4,7 +4,7 @@ import { DatabaseModule } from '@/database/database.module';
 import { UserSeeder } from '@/database/seeder/user.seeder';
 import { config } from '@/config';
 import { TypeOrmModule } from '@/database/typeorm/typeorm.module';
-import { UserRepository } from '@/user/repositories/user.repository';
+import { UserRepository } from '@/modules/user/repositories/user.repository';
 
 @Module({
   imports: [

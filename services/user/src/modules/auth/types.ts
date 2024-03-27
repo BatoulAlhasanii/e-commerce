@@ -1,5 +1,5 @@
-import { User } from '@/user/entity/user.entity';
-import { UserSerializer } from '@/user/serializers/user.serializer';
+import { User } from '@/modules/user/entities/user.entity';
+import { UserSerializer } from '@/modules/user/serializers/user.serializer';
 
 export type token = {
   access_token: string;
@@ -13,3 +13,8 @@ export type AuthUserInfo = {
   user: UserSerializer;
   token;
 };
+
+export interface AuthUserPayload {
+  id: string;
+  role: string;
+}

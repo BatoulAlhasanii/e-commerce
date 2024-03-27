@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserRepository } from '@/user/repositories/user.repository';
-import { RegisterUserDto } from '@/auth/dto/register-user.dto';
-import { User } from '@/user/entity/user.entity';
-import { UserSerializer } from '@/user/serializers/user.serializer';
+import { UserRepository } from '@/modules/user/repositories/user.repository';
+import { RegisterUserDto } from '@/modules/auth/dto/register-user.dto';
+import { User } from '@/modules/user/entities/user.entity';
+import { UserSerializer } from '@/modules/user/serializers/user.serializer';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AuthUserInfo, token } from '@/auth/types';
-import { LoginUserDto } from '@/auth/dto/login-user.dto';
+import { AuthUserInfo, AuthUserPayload, token } from '@/modules/auth/types';
+import { LoginUserDto } from '@/modules/auth/dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   private generateToken(user: User): token {
-    const payload = { id: user.id };
+    const payload: AuthUserPayload = { id: user.id, role: user.role };
 
     return {
       access_token: this.jwtService.sign(payload),

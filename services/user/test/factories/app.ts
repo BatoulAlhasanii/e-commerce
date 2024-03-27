@@ -1,7 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../src/app.module';
+import { ValidationException } from '@/exception/validation.exception';
 
 export class AppFactory {
   private constructor(
@@ -21,6 +22,15 @@ export class AppFactory {
     const module: TestingModule = await moduleBuilder.compile();
 
     const app: INestApplication = module.createNestApplication();
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        whitelist: true,
+        transform: true,
+        exceptionFactory: (errors) => new ValidationException(errors),
+      }),
+    );
 
     await app.init();
 

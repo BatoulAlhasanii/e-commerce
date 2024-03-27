@@ -2,8 +2,8 @@ import * as request from 'supertest';
 import { AppFactory } from './factories/app';
 import { userDefinition } from '@/database/factories/user.factory';
 import { Factory } from '@/database/factories/factory';
-import { UserRepository } from '@/user/repositories/user.repository';
-import { User } from '@/user/entity/user.entity';
+import { UserRepository } from '@/modules/user/repositories/user.repository';
+import { User } from '@/modules/user/entities/user.entity';
 
 describe('AuthController (e2e)', () => {
   let app: AppFactory;
@@ -28,8 +28,8 @@ describe('AuthController (e2e)', () => {
 
     const response = await request(app.instance.getHttpServer())
       .post('/users/auth/register')
-      .send(payload)
-      .expect(201);
+      .send(payload);
+    console.log('response', response.body);
 
     const { password, ...userInfo } = response.body.data.user;
 

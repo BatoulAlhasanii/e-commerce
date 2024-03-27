@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
 } from 'typeorm';
-import { UserRole } from '@/user/enums/user-role.enum';
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 import * as bcrypt from 'bcrypt';
 
 @Entity()
