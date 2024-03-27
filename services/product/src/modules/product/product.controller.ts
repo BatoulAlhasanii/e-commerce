@@ -45,10 +45,7 @@ export class ProductController {
   async findAll(): Promise<ApiResponse<ProductSerializer[]>> {
     const products: Product[] = await this.productService.findAll();
 
-    return responseSuccess(
-      'Product created successfully',
-      ProductSerializer.transformMany(products),
-    );
+    return responseSuccess(null, ProductSerializer.transformMany(products));
   }
 
   @Get(':id')

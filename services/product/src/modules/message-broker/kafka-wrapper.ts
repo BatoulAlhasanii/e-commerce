@@ -10,6 +10,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { IMessageBroker } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { queueGroupName } from '@/modules/message-broker/queue-group-name';
 import { ConfigService } from '@nestjs/config';
+import { IEvent } from '@/modules/message-broker/interfaces/event.interface';
 
 @Injectable()
 export class KafkaWrapper
@@ -43,14 +44,20 @@ export class KafkaWrapper
     await this._producer.connect();
   }
 
-  async publish(topic: string, data: any): Promise<void> {
+  async publish<T extends IEvent>(
+    topic: T['subject'],
+    data: T['data'],
+  ): Promise<void> {
     await this._producer.send({
       topic: topic,
       messages: [{ value: JSON.stringify(data) }],
     });
   }
 
-  async listen(topic: string, callback: Function): Promise<void> {
+  async listen<T extends IEvent>(
+    topic: T['subject'],
+    callback: (data: T['data']) => Promise<void>,
+  ): Promise<void> {
     const consumer: Consumer = this._kafka.consumer({
       groupId: queueGroupName,
     });

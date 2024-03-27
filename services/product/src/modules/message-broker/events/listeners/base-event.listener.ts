@@ -7,7 +7,7 @@ import { Inject } from '@nestjs/common';
 
 export abstract class BaseEventListener<T extends IEvent> {
   abstract subject: T['subject'];
-  abstract handle(data: T['data']): void;
+  abstract handle(data: T['data']): Promise<void>;
 
   constructor(
     @Inject(MESSAGE_BROKER)

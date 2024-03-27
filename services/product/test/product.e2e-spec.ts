@@ -8,6 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { faker } from '@faker-js/faker';
 import { AuthUserPayload } from '@/modules/auth/types';
 import { UserRole } from '@/modules/auth/enums/user-role.enum';
+import {
+  IMessageBroker,
+  MESSAGE_BROKER,
+} from '@/modules/message-broker/interfaces/message-broker.interface';
+import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 
 describe('ProductController (e2e)', () => {
   let app: AppFactory;
@@ -17,6 +22,7 @@ describe('ProductController (e2e)', () => {
     role: UserRole.SELLER,
   };
   let token: string;
+  let messageBroker: IMessageBroker;
 
   beforeAll(async () => {
     app = await AppFactory.new();
@@ -26,10 +32,14 @@ describe('ProductController (e2e)', () => {
     const jwtService: JwtService = app.instance.get(JwtService);
 
     token = jwtService.sign(user);
+
+    messageBroker = app.instance.get(MESSAGE_BROKER);
   });
 
   afterEach(async () => {
     await app.cleanupDB();
+
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
@@ -66,6 +76,16 @@ describe('ProductController (e2e)', () => {
 
     expect(storedProduct.stock).toEqual(product.stock);
     expect(storedProduct.price).toEqual(product.price);
+    expect(messageBroker.publish).toHaveBeenCalledTimes(1);
+    expect(messageBroker.publish).toHaveBeenCalledWith(
+      Subjects.ProductCreated,
+      {
+        id: storedProduct.id,
+        name: storedProduct.name,
+        price: storedProduct.price,
+        version: storedProduct.version,
+      },
+    );
   });
 
   it('tests get product successfully', async () => {
@@ -105,6 +125,16 @@ describe('ProductController (e2e)', () => {
     expect(storedProduct.name).toEqual(payload.name);
     expect(storedProduct.stock).toEqual(product.stock);
     expect(storedProduct.price).toEqual(product.price);
+    expect(messageBroker.publish).toHaveBeenCalledTimes(1);
+    expect(messageBroker.publish).toHaveBeenCalledWith(
+      Subjects.ProductUpdated,
+      {
+        id: storedProduct.id,
+        name: storedProduct.name,
+        price: storedProduct.price,
+        version: storedProduct.version,
+      },
+    );
   });
 
   it('tests delete product successfully', async () => {
@@ -124,5 +154,10 @@ describe('ProductController (e2e)', () => {
     });
 
     expect(storedProduct).toBeNull();
+    expect(messageBroker.publish).toHaveBeenCalledTimes(1);
+    expect(messageBroker.publish).toHaveBeenCalledWith(
+      Subjects.ProductDeleted,
+      { id: product.id, version: product.version + 1 },
+    );
   });
 });
