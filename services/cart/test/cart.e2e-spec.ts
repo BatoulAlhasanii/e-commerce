@@ -13,6 +13,7 @@ import { itemDefinition } from '@/factories/item.factory';
 import Redis from 'ioredis';
 import { getRedisConnectionToken } from '@nestjs-modules/ioredis';
 import { ICart } from '@/modules/cart/interfaces/cart.interface';
+import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 
 describe('CartController (e2e)', () => {
   let app: AppFactory;
@@ -387,6 +388,53 @@ describe('CartController (e2e)', () => {
       expect(redis.get).toBeCalledWith(user.id);
 
       expect(redis.del).toBeCalledTimes(0);
+    });
+  });
+
+  describe('POST /carts/checkout', () => {
+    it('tests checkout cart successfully', async () => {
+      const firstAddedItem: IItem = itemDefinition();
+      const secondAddedItem: IItem = itemDefinition();
+
+      const cart: ICart = {
+        items: [firstAddedItem, secondAddedItem],
+        total:
+          firstAddedItem.productPrice * firstAddedItem.quantity +
+          secondAddedItem.productPrice * secondAddedItem.quantity,
+      };
+
+      const cartString: string = JSON.stringify(cart);
+
+      jest.spyOn(redis, 'get').mockResolvedValue(cartString);
+      jest.spyOn(redis, 'del').mockResolvedValue(1);
+
+      await request(app.instance.getHttpServer())
+        .post(`${endpoint}/checkout`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(redis.get).toBeCalledTimes(1);
+      expect(redis.get).toBeCalledWith(user.id);
+
+      expect(redis.del).toBeCalledTimes(1);
+      expect(redis.del).toBeCalledWith(user.id);
+
+      expect(messageBroker.publish).toHaveBeenCalledTimes(1);
+      expect(messageBroker.publish).toHaveBeenCalledWith(
+        Subjects.CartCheckedOut,
+        {
+          items: [
+            {
+              productId: firstAddedItem.productId,
+              quantity: firstAddedItem.quantity,
+            },
+            {
+              productId: secondAddedItem.productId,
+              quantity: secondAddedItem.quantity,
+            },
+          ],
+        },
+      );
     });
   });
 });

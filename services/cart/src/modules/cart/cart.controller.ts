@@ -8,6 +8,7 @@ import {
   Put,
   HttpCode,
   HttpStatus,
+  Post,
 } from '@nestjs/common';
 import { CartService } from '@/modules/cart/cart.service';
 import { AddItemDto } from '@/modules/cart/dto/add-item.dto';
@@ -46,7 +47,7 @@ export class CartController {
     @Param() updateItemParamDto: UpdateItemParamDto,
     @Body() updateItemDto: UpdateItemDto,
     @AuthUser() user: AuthUserPayload,
-  ) {
+  ): Promise<ApiResponse<ICart>> {
     return responseSuccess(
       'Item updated successfully',
       await this.cartService.updateItem(
@@ -61,7 +62,7 @@ export class CartController {
   async removeItem(
     @Param() removeItemParamDto: RemoveItemParamDto,
     @AuthUser() user: AuthUserPayload,
-  ) {
+  ): Promise<ApiResponse<ICart>> {
     return responseSuccess(
       'Item removed successfully',
       await this.cartService.removeItem(removeItemParamDto, user),
@@ -74,5 +75,15 @@ export class CartController {
     await this.cartService.remove(user);
 
     return;
+  }
+
+  @Post('checkout')
+  @HttpCode(HttpStatus.OK)
+  async checkout(
+    @AuthUser() user: AuthUserPayload,
+  ): Promise<ApiResponse<unknown>> {
+    await this.cartService.checkout(user);
+
+    return responseSuccess('Cart checked out successfully');
   }
 }

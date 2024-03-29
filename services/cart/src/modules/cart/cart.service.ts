@@ -8,10 +8,15 @@ import { ICart } from '@/modules/cart/interfaces/cart.interface';
 import { IItem } from '@/modules/cart/interfaces/item.interface';
 import { RemoveItemParamDto } from '@/modules/cart/dto/remove-item-param.dto';
 import { UpdateItemParamDto } from '@/modules/cart/dto/update-item-param.dto';
+import { ICheckedOutCartItem } from '@/modules/message-broker/interfaces/cart-checked-out.interface';
+import { CartCheckedOutPublisher } from '@/modules/cart/events/publishers/cart-checked-out.publisher';
 
 @Injectable()
 export class CartService {
-  constructor(@InjectRedis() private readonly redis: Redis) {}
+  constructor(
+    @InjectRedis() private readonly redis: Redis,
+    private readonly cartCheckedOutPublisher: CartCheckedOutPublisher,
+  ) {}
 
   async addItem(addItemDto: AddItemDto, user: AuthUserPayload): Promise<ICart> {
     let cart: ICart | null = await this.getCart(user);
@@ -108,5 +113,24 @@ export class CartService {
     await this.redis.del(user.id);
 
     return;
+  }
+
+  async checkout(user: AuthUserPayload): Promise<void> {
+    const cart: ICart | null = await this.getCart(user);
+
+    if (!cart || cart.items.length == 0) {
+      throw new HttpException('Cart is empty', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.redis.del(user.id);
+
+    const items: ICheckedOutCartItem[] = cart.items.map(
+      (item: IItem): ICheckedOutCartItem => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }),
+    );
+
+    await this.cartCheckedOutPublisher.publish({ items });
   }
 }
