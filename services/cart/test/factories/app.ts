@@ -6,9 +6,7 @@ import { MockKafkaWrapper } from '@/modules/message-broker/mocks/mock-kafka-wrap
 import { AppModule } from '@/app.module';
 
 export class AppFactory {
-  private constructor(
-    private appInstance: INestApplication,
-  ) {}
+  private constructor(private appInstance: INestApplication) {}
 
   get instance(): INestApplication {
     return this.appInstance;

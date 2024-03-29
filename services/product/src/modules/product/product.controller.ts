@@ -82,9 +82,9 @@ export class ProductController {
   async remove(
     @Param('id') id: string,
     @AuthUser() user: AuthUserPayload,
-  ): Promise<ApiResponse<null>> {
+  ): Promise<void> {
     await this.productService.remove(id, user);
 
-    return responseSuccess();
+    return;
   }
 }

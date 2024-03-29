@@ -7,6 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/exception/http-exception.filter';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MessageBrokerModule } from '@/modules/message-broker/message-broker.module';
+import { CartModule } from '@/modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MessageBrokerModule } from '@/modules/message-broker/message-broker.mod
     }),
     MessageBrokerModule,
     AuthModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [

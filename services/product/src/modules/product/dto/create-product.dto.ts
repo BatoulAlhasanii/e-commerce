@@ -10,7 +10,8 @@ export class CreateProductDto {
   @IsNotEmpty()
   stock: number;
 
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
+  @IsNotEmpty()
   price: number;
 }

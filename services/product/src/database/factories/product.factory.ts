@@ -6,7 +6,7 @@ export const productDefinition = (): DeepPartial<Product> => {
   return {
     name: faker.commerce.productName(),
     stock: faker.number.int({ min: 0, max: 100 }),
-    price: faker.number.float({ min: 100.0, max: 500.0 }),
+    price: faker.number.float({ min: 100.0, max: 500.0, fractionDigits: 2 }),
     userId: faker.string.uuid(),
   };
 };
