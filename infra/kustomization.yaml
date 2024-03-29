@@ -19,3 +19,8 @@ resources:
   - ./k8s/cart/cart-depl.yaml
   - ./k8s/cart/cart-redis-depl.yaml
   - ./k8s/cart/cart-redis-pvc.yaml
+  - ./k8s/order/order-config.yaml
+  - ./k8s/order/order-depl.yaml
+  - ./k8s/order/order-postgres-depl.yaml
+  - ./k8s/order/order-postgres-pv.yaml
+  - ./k8s/order/order-secret.yaml

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: e-commerce/order
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: node-env
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: db-type
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: db-port
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-secret
+                  key: db-password
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: db-name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: common-secret
+                  key: jwt-key
+            - name: JWT_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: jwt-ttl
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-client-id
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-broker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-srv
+spec:
+  selector:
+    app: order
+  ports:
+    - name: order
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
