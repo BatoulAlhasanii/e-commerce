@@ -1,11 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VersionColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -17,6 +10,9 @@ export class Product {
 
   @Column({ type: 'integer', unsigned: true })
   stock: number;
+
+  @Column({ type: 'integer', unsigned: true, default: 0 })
+  reservedQuantity: number;
 
   @Column({ type: 'float' })
   price: number;
@@ -32,4 +28,7 @@ export class Product {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  public deletedAt: Date;
 }

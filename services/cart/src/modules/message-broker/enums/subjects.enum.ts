@@ -1,3 +1,3 @@
 export enum Subjects {
-  CartCheckedOut = 'cart:checked-out',
+  CartCheckedOut = 'cart.checked_out',
 }

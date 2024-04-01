@@ -131,6 +131,6 @@ export class CartService {
       }),
     );
 
-    await this.cartCheckedOutPublisher.publish({ items });
+    await this.cartCheckedOutPublisher.publish({ userId: user.id, items });
   }
 }

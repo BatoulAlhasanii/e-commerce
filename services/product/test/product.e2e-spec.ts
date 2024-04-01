@@ -8,13 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { faker } from '@faker-js/faker';
 import { AuthUserPayload } from '@/modules/auth/types';
 import { UserRole } from '@/modules/auth/enums/user-role.enum';
-import {
-  IMessageBroker,
-  MESSAGE_BROKER,
-} from '@/modules/message-broker/interfaces/message-broker.interface';
+import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 
 describe('ProductController (e2e)', () => {
+  const endpoint: string = '/products';
   let app: AppFactory;
   let productRepository: ProductRepository;
   const user: AuthUserPayload = {
@@ -47,15 +45,9 @@ describe('ProductController (e2e)', () => {
   });
 
   it('tests get all products successfully', async () => {
-    const products: Product[] = await Factory.createMany(
-      productRepository,
-      productDefinition,
-      3,
-    );
+    const products: Product[] = await Factory.createMany(productRepository, productDefinition, 3);
 
-    const response = await request(app.instance.getHttpServer())
-      .get('/products')
-      .expect(200);
+    const response = await request(app.instance.getHttpServer()).get(`${endpoint}`).expect(200);
 
     expect(response.body.data.length).toEqual(3);
     expect(response.body.data[0].name).toEqual(products[0].name);
@@ -64,11 +56,7 @@ describe('ProductController (e2e)', () => {
   it('tests create product successfully', async () => {
     const { userId, ...product } = productDefinition();
 
-    await request(app.instance.getHttpServer())
-      .post('/products')
-      .set('Authorization', `Bearer ${token}`)
-      .send(product)
-      .expect(201);
+    await request(app.instance.getHttpServer()).post(`${endpoint}`).set('Authorization', `Bearer ${token}`).send(product).expect(201);
 
     const storedProduct: Product = await productRepository.findOneBy({
       name: product.name,
@@ -77,26 +65,18 @@ describe('ProductController (e2e)', () => {
     expect(storedProduct.stock).toEqual(product.stock);
     expect(storedProduct.price).toEqual(product.price);
     expect(messageBroker.publish).toHaveBeenCalledTimes(1);
-    expect(messageBroker.publish).toHaveBeenCalledWith(
-      Subjects.ProductCreated,
-      {
-        id: storedProduct.id,
-        name: storedProduct.name,
-        price: storedProduct.price,
-        version: storedProduct.version,
-      },
-    );
+    expect(messageBroker.publish).toHaveBeenCalledWith(Subjects.ProductCreated, {
+      id: storedProduct.id,
+      name: storedProduct.name,
+      price: storedProduct.price,
+      version: storedProduct.version,
+    });
   });
 
   it('tests get product successfully', async () => {
-    const product: Product = await Factory.create(
-      productRepository,
-      productDefinition,
-    );
+    const product: Product = await Factory.create(productRepository, productDefinition);
 
-    const response = await request(app.instance.getHttpServer())
-      .get(`/products/${product.id}`)
-      .expect(200);
+    const response = await request(app.instance.getHttpServer()).get(`${endpoint}/${product.id}`).expect(200);
 
     expect(response.body.data.name).toEqual(product.name);
     expect(response.body.data.stock).toEqual(product.stock);
@@ -104,19 +84,11 @@ describe('ProductController (e2e)', () => {
   });
 
   it('tests update product successfully', async () => {
-    const product: Product = await Factory.create(
-      productRepository,
-      productDefinition,
-      { userId: user.id },
-    );
+    const product: Product = await Factory.create(productRepository, productDefinition, { userId: user.id });
 
     const payload = { name: faker.commerce.productName() };
 
-    await request(app.instance.getHttpServer())
-      .put(`/products/${product.id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(payload)
-      .expect(200);
+    await request(app.instance.getHttpServer()).put(`${endpoint}/${product.id}`).set('Authorization', `Bearer ${token}`).send(payload).expect(200);
 
     const storedProduct: Product = await productRepository.findOneBy({
       id: product.id,
@@ -126,38 +98,42 @@ describe('ProductController (e2e)', () => {
     expect(storedProduct.stock).toEqual(product.stock);
     expect(storedProduct.price).toEqual(product.price);
     expect(messageBroker.publish).toHaveBeenCalledTimes(1);
-    expect(messageBroker.publish).toHaveBeenCalledWith(
-      Subjects.ProductUpdated,
-      {
-        id: storedProduct.id,
-        name: storedProduct.name,
-        price: storedProduct.price,
-        version: storedProduct.version,
-      },
-    );
+    expect(messageBroker.publish).toHaveBeenCalledWith(Subjects.ProductUpdated, {
+      id: storedProduct.id,
+      name: storedProduct.name,
+      price: storedProduct.price,
+      version: storedProduct.version,
+    });
   });
 
   it('tests delete product successfully', async () => {
-    const product: Product = await Factory.create(
-      productRepository,
-      productDefinition,
-      { userId: user.id },
-    );
+    const product: Product = await Factory.create(productRepository, productDefinition, { userId: user.id });
 
-    await request(app.instance.getHttpServer())
-      .delete(`/products/${product.id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(204);
+    await request(app.instance.getHttpServer()).delete(`${endpoint}/${product.id}`).set('Authorization', `Bearer ${token}`).expect(204);
+
+    const storedProduct: Product = await productRepository.findOne({
+      where: {
+        id: product.id,
+      },
+      withDeleted: true,
+    });
+
+    expect(storedProduct.deletedAt).toBeDefined();
+    expect(messageBroker.publish).toHaveBeenCalledTimes(1);
+    expect(messageBroker.publish).toHaveBeenCalledWith(Subjects.ProductDeleted, { id: product.id, version: product.version + 1 });
+  });
+
+  it('tests throwing error on deleting reserved product', async () => {
+    const product: Product = await Factory.create(productRepository, productDefinition, { userId: user.id, reservedQuantity: 1 });
+
+    const response = await request(app.instance.getHttpServer()).delete(`${endpoint}/${product.id}`).set('Authorization', `Bearer ${token}`).expect(400);
 
     const storedProduct: Product = await productRepository.findOneBy({
       id: product.id,
     });
 
-    expect(storedProduct).toBeNull();
-    expect(messageBroker.publish).toHaveBeenCalledTimes(1);
-    expect(messageBroker.publish).toHaveBeenCalledWith(
-      Subjects.ProductDeleted,
-      { id: product.id, version: product.version + 1 },
-    );
+    expect(response.body.errors[0].detail).toBe('You cannot remove reserved product');
+    expect(storedProduct).toBeDefined();
+    expect(messageBroker.publish).toHaveBeenCalledTimes(0);
   });
 });

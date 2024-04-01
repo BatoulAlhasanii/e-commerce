@@ -423,6 +423,7 @@ describe('CartController (e2e)', () => {
       expect(messageBroker.publish).toHaveBeenCalledWith(
         Subjects.CartCheckedOut,
         {
+          userId: user.id,
           items: [
             {
               productId: firstAddedItem.productId,

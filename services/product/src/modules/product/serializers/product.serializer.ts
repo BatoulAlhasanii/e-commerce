@@ -5,6 +5,7 @@ export class ProductSerializer extends EntitySerializer<Product> {
   id: string;
   name: string;
   stock: number;
+  reservedQuantity: number;
   price: number;
   userId: string;
   createdAt: Date;
@@ -15,6 +16,7 @@ export class ProductSerializer extends EntitySerializer<Product> {
     this.id = entity.id;
     this.name = entity.name;
     this.stock = entity.stock;
+    this.reservedQuantity = entity.reservedQuantity;
     this.price = entity.price;
     this.userId = entity.userId;
     this.createdAt = entity.createdAt;
