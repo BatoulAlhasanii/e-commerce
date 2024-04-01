@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProductService } from '@/modules/product/product.service';
 import { CreateProductDto } from '@/modules/product/dto/create-product.dto';
 import { UpdateProductDto } from '@/modules/product/dto/update-product.dto';
@@ -26,19 +16,10 @@ export class ProductController {
 
   @Post()
   @HasRole(UserRole.SELLER)
-  async create(
-    @Body() createProductDto: CreateProductDto,
-    @AuthUser() user: AuthUserPayload,
-  ): Promise<ApiResponse<ProductSerializer>> {
-    const product: Product = await this.productService.create(
-      createProductDto,
-      user,
-    );
+  async create(@Body() createProductDto: CreateProductDto, @AuthUser() user: AuthUserPayload): Promise<ApiResponse<ProductSerializer>> {
+    const product: Product = await this.productService.create(createProductDto, user);
 
-    return responseSuccess(
-      'Product created successfully',
-      ProductSerializer.transform(product),
-    );
+    return responseSuccess('Product created successfully', ProductSerializer.transform(product));
   }
 
   @Get()
@@ -49,9 +30,7 @@ export class ProductController {
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<ApiResponse<ProductSerializer>> {
+  async findOne(@Param('id') id: string): Promise<ApiResponse<ProductSerializer>> {
     const product: Product = await this.productService.findOne(id);
 
     return responseSuccess(null, ProductSerializer.transform(product));
@@ -64,25 +43,15 @@ export class ProductController {
     @Body() updateProductDto: UpdateProductDto,
     @AuthUser() user: AuthUserPayload,
   ): Promise<ApiResponse<ProductSerializer>> {
-    const product: Product = await this.productService.update(
-      id,
-      updateProductDto,
-      user,
-    );
+    const product: Product = await this.productService.update(id, updateProductDto, user);
 
-    return responseSuccess(
-      'Product updated successfully',
-      ProductSerializer.transform(product),
-    );
+    return responseSuccess('Product updated successfully', ProductSerializer.transform(product));
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @HasRole(UserRole.SELLER)
-  async remove(
-    @Param('id') id: string,
-    @AuthUser() user: AuthUserPayload,
-  ): Promise<void> {
+  async remove(@Param('id') id: string, @AuthUser() user: AuthUserPayload): Promise<void> {
     await this.productService.remove(id, user);
 
     return;

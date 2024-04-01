@@ -11,9 +11,7 @@ export class ValidationException extends HttpException {
       return {
         status: this.getStatus(),
         title: this.message,
-        detail: error.constraints
-          ? Object.values(error.constraints)[0]
-          : undefined,
+        detail: error.constraints ? Object.values(error.constraints)[0] : undefined,
         source: {
           pointer: error.property,
         },

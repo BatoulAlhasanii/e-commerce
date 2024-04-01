@@ -22,8 +22,7 @@ export class Factory {
 
     const instances: DeepPartial<Entity>[] = Array.from(
       { length: count },
-      (): DeepPartial<Entity> =>
-        areValuesOverridden ? { ...definition(), ...values } : definition(),
+      (): DeepPartial<Entity> => (areValuesOverridden ? { ...definition(), ...values } : definition()),
     );
 
     return await repo.save(instances);

@@ -48,7 +48,10 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
 
       await queryRunner.commitTransaction();
 
-      await this.productsReservedPublisher.publish({ userId: data.userId, items: data.items });
+      await this.productsReservedPublisher.publish({
+        userId: data.userId,
+        items: data.items,
+      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
@@ -99,7 +102,10 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
       }
 
       if (storedProduct.stock < item.quantity) {
-        itemAvailabilityGroups.insufficientQuantityItems.push({ ...item, availableQuantity: storedProduct.stock });
+        itemAvailabilityGroups.insufficientQuantityItems.push({
+          ...item,
+          availableQuantity: storedProduct.stock,
+        });
         continue;
       }
 

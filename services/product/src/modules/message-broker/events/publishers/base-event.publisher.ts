@@ -1,8 +1,5 @@
 import { IEvent } from '@/modules/message-broker/interfaces/event.interface';
-import {
-  IMessageBroker,
-  MESSAGE_BROKER,
-} from '@/modules/message-broker/interfaces/message-broker.interface';
+import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { Inject } from '@nestjs/common';
 
 export abstract class BaseEventPublisher<T extends IEvent> {

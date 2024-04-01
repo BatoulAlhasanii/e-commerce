@@ -6,7 +6,7 @@ import { productDefinition } from '@/database/factories/product.factory';
 import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { CartCheckedOutListener } from '@/modules/product/events/listeners/cart-checked-out.listener';
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
-import { ICartCheckedOut, ICheckedOutCartItem } from '@/modules/message-broker/interfaces/cart-checked-out.interface';
+import { ICartCheckedOut } from '@/modules/message-broker/interfaces/cart-checked-out.interface';
 import { faker } from '@faker-js/faker';
 
 describe('CartCheckedOutListener', () => {
@@ -87,7 +87,7 @@ describe('CartCheckedOutListener', () => {
       userId: data.userId,
     });
 
-    let products: Product[] = await productRepository.find();
+    const products: Product[] = await productRepository.find();
 
     expect(products[0].stock).toEqual(3);
     expect(products[0].reservedQuantity).toEqual(0);
@@ -131,7 +131,7 @@ describe('CartCheckedOutListener', () => {
       items: [data.items[0], data.items[1], data.items[2]],
     });
 
-    let products: Product[] = await productRepository.find();
+    const products: Product[] = await productRepository.find();
 
     expect(products[0].stock).toEqual(2);
     expect(products[0].reservedQuantity).toEqual(1);
