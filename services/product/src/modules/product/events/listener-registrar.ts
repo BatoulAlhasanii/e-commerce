@@ -8,7 +8,7 @@ export class ListenerRegistrar implements OnModuleInit {
     private readonly cartCheckedOutListener: CartCheckedOutListener,
   ) {}
 
-  async onModuleInit() {
-    await this.cartCheckedOutListener.listen();
+  async onModuleInit(): Promise<void> {
+    await this.messageBroker.registerListener(this.cartCheckedOutListener);
   }
 }

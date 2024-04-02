@@ -3,8 +3,7 @@ import { ICartCheckedOut, ICheckedOutCartItem } from '@/modules/message-broker/i
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 import { Product } from '@/modules/product/entities/product.entity';
 import { DataSource, In, QueryRunner } from 'typeorm';
-import { Inject, Injectable } from '@nestjs/common';
-import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
+import { Injectable } from '@nestjs/common';
 import { IItemAvailabilityGroups } from '@/modules/product/interfaces/item-availability-groups.interface';
 import { ProductsReservedPublisher } from '@/modules/product/events/publishers/products-reserved.publisher';
 import { ProductsReservationFailedPublisher } from '@/modules/product/events/publishers/products-reservation-failed.publisher';
@@ -14,13 +13,11 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
   subject: Subjects.CartCheckedOut = Subjects.CartCheckedOut;
 
   constructor(
-    @Inject(MESSAGE_BROKER)
-    messageBroker: IMessageBroker,
     private readonly dataSource: DataSource,
     private readonly productsReservedPublisher: ProductsReservedPublisher,
     private readonly productsReservationFailedPublisher: ProductsReservationFailedPublisher,
   ) {
-    super(messageBroker);
+    super();
   }
 
   async handle(data: ICartCheckedOut['data']): Promise<void> {

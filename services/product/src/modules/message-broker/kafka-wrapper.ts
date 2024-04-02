@@ -43,7 +43,7 @@ export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestr
     });
   }
 
-  async listen<T extends IEvent>(topic: T['subject'], instance: BaseEventListener<T>): Promise<void> {
+  async registerListener<T extends IEvent>(instance: BaseEventListener<T>): Promise<void> {
     const consumer: Consumer = this._kafka.consumer({
       groupId: queueGroupName,
     });
@@ -52,13 +52,12 @@ export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestr
 
     await consumer.connect();
 
-    await consumer!.subscribe({ topic, fromBeginning: true });
+    await consumer!.subscribe({ topic: instance.subject, fromBeginning: true });
 
     await consumer!.run({
       autoCommit: false,
       eachMessage: async ({ topic, partition, message }: EachMessagePayload) => {
         const parsedData = this.parseMessage(message.value);
-        console.log(topic, parsedData);
 
         await instance.handle(parsedData);
 
