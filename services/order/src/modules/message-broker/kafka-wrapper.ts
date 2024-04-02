@@ -1,11 +1,4 @@
-import {
-  Kafka,
-  Consumer,
-  EachMessagePayload,
-  Partitioners,
-  Producer,
-  logLevel,
-} from 'kafkajs';
+import { Kafka, Consumer, EachMessagePayload, Partitioners, Producer, logLevel } from 'kafkajs';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { IMessageBroker } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { queueGroupName } from '@/modules/message-broker/queue-group-name';
@@ -13,9 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { IEvent } from '@/modules/message-broker/interfaces/event.interface';
 
 @Injectable()
-export class KafkaWrapper
-  implements IMessageBroker, OnModuleInit, OnModuleDestroy
-{
+export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestroy {
   protected _kafka?: Kafka;
   protected _producer?: Producer;
   protected _consumers?: Consumer[] = [];
@@ -44,20 +35,14 @@ export class KafkaWrapper
     await this._producer.connect();
   }
 
-  async publish<T extends IEvent>(
-    topic: T['subject'],
-    data: T['data'],
-  ): Promise<void> {
+  async publish<T extends IEvent>(topic: T['subject'], data: T['data']): Promise<void> {
     await this._producer.send({
       topic: topic,
       messages: [{ value: JSON.stringify(data) }],
     });
   }
 
-  async listen<T extends IEvent>(
-    topic: T['subject'],
-    callback: (data: T['data']) => Promise<void>,
-  ): Promise<void> {
+  async listen<T extends IEvent>(topic: T['subject'], callback: (data: T['data']) => Promise<void>): Promise<void> {
     const consumer: Consumer = this._kafka.consumer({
       groupId: queueGroupName,
     });
@@ -70,26 +55,18 @@ export class KafkaWrapper
 
     await consumer!.run({
       autoCommit: false,
-      eachMessage: async ({
-        topic,
-        partition,
-        message,
-      }: EachMessagePayload) => {
+      eachMessage: async ({ topic, partition, message }: EachMessagePayload) => {
         const parsedData = this.parseMessage(message.value);
 
         await callback(parsedData);
 
-        await consumer.commitOffsets([
-          { topic, partition, offset: message.offset },
-        ]);
+        await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
       },
     });
   }
 
   private parseMessage(data: any) {
-    return typeof data === 'string'
-      ? JSON.parse(data)
-      : JSON.parse(data.toString('utf8'));
+    return typeof data === 'string' ? JSON.parse(data) : JSON.parse(data.toString('utf8'));
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -98,9 +75,7 @@ export class KafkaWrapper
     }
 
     if (this._consumers.length) {
-      await Promise.all(
-        this._consumers.map((consumer: Consumer) => consumer.disconnect()),
-      );
+      await Promise.all(this._consumers.map((consumer: Consumer) => consumer.disconnect()));
     }
   }
 }

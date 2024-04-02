@@ -48,14 +48,10 @@ export class AppFactory {
   }
 
   async cleanupDB(): Promise<void> {
-    const tables: string[] = this.dataSource.entityMetadatas.map(
-      (entity) => entity.tableName,
-    );
+    const tables: string[] = this.dataSource.entityMetadatas.map((entity) => entity.tableName);
 
     for (const table of tables) {
-      await this.dataSource.query(
-        `TRUNCATE TABLE "${table}" RESTART IDENTITY CASCADE;`,
-      );
+      await this.dataSource.query(`TRUNCATE TABLE "${table}" RESTART IDENTITY CASCADE;`);
     }
   }
 }

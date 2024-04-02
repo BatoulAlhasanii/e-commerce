@@ -6,8 +6,5 @@ import { RoleGuard } from '@/modules/auth/guards/role.guard';
 export const ROLES_KEY: string = 'roles';
 
 export const HasRole = (...roles: UserRole[]): ((...args: any) => void) => {
-  return applyDecorators(
-    SetMetadata(ROLES_KEY, roles),
-    UseGuards(JWTAuthGuard, RoleGuard),
-  );
+  return applyDecorators(SetMetadata(ROLES_KEY, roles), UseGuards(JWTAuthGuard, RoleGuard));
 };

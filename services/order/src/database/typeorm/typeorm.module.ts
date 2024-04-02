@@ -4,9 +4,7 @@ import { DataSource } from 'typeorm';
 import { TYPEORM_ENTITY_REPOSITORY } from '@/database/typeorm/typeorm-entity-repository.decorator';
 
 export class TypeOrmModule {
-  public static forFeature<T extends new (...args: any[]) => any>(
-    repositories: T[],
-  ): DynamicModule {
+  public static forFeature<T extends new (...args: any[]) => any>(repositories: T[]): DynamicModule {
     const providers: Provider[] = [];
 
     for (const repository of repositories) {
@@ -21,11 +19,7 @@ export class TypeOrmModule {
         provide: repository,
         useFactory: (dataSource: DataSource): typeof repository => {
           const baseRepository = dataSource.getRepository<any>(entity);
-          return new repository(
-            baseRepository.target,
-            baseRepository.manager,
-            baseRepository.queryRunner,
-          );
+          return new repository(baseRepository.target, baseRepository.manager, baseRepository.queryRunner);
         },
       });
     }
