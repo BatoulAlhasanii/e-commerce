@@ -6,7 +6,7 @@ export class MockKafkaWrapper implements IMessageBroker {
     // return Promise.resolve(undefined);
   });
 
-  listen = jest.fn().mockImplementation(async (topic: string, callback: Function): Promise<void> => {
+  registerListener = jest.fn().mockImplementation(async (instance: any): Promise<void> => {
     // Mock implementation for the consume method
   });
 }

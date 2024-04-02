@@ -4,6 +4,7 @@ import { IMessageBroker } from '@/modules/message-broker/interfaces/message-brok
 import { queueGroupName } from '@/modules/message-broker/queue-group-name';
 import { ConfigService } from '@nestjs/config';
 import { IEvent } from '@/modules/message-broker/interfaces/event.interface';
+import { BaseEventListener } from '@/modules/message-broker/events/listeners/base-event.listener';
 
 @Injectable()
 export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestroy {
@@ -42,7 +43,7 @@ export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestr
     });
   }
 
-  async listen<T extends IEvent>(topic: T['subject'], callback: (data: T['data']) => Promise<void>): Promise<void> {
+  async registerListener<T extends IEvent>(instance: BaseEventListener<T>): Promise<void> {
     const consumer: Consumer = this._kafka.consumer({
       groupId: queueGroupName,
     });
@@ -51,14 +52,14 @@ export class KafkaWrapper implements IMessageBroker, OnModuleInit, OnModuleDestr
 
     await consumer.connect();
 
-    await consumer!.subscribe({ topic, fromBeginning: true });
+    await consumer!.subscribe({ topic: instance.subject, fromBeginning: true });
 
     await consumer!.run({
       autoCommit: false,
       eachMessage: async ({ topic, partition, message }: EachMessagePayload) => {
         const parsedData = this.parseMessage(message.value);
 
-        await callback(parsedData);
+        await instance.handle(parsedData);
 
         await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
       },
