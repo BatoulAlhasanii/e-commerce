@@ -6,6 +6,5 @@ export interface IProductCreated {
     id: string;
     name: string;
     price: number;
-    version: number;
   };
 }

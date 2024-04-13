@@ -31,7 +31,6 @@ export class ProductService {
       id: product.id,
       name: product.name,
       price: product.price,
-      version: product.version,
     });
 
     return product;
