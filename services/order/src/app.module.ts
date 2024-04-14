@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/exception/http-exception.filter';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MessageBrokerModule } from '@/modules/message-broker/message-broker.module';
 import { ProductModule } from '@/modules/product/product.module';
+import { OrderModule } from '@/modules/order/order.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProductModule } from '@/modules/product/product.module';
     MessageBrokerModule,
     AuthModule,
     ProductModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [
