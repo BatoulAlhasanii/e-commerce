@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: e-commerce/expiration
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: node-env
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: expiration-config
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: expiration-config
+                  key: redis-port
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-client-id
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-broker

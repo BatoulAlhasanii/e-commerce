@@ -24,3 +24,6 @@ resources:
   - ./k8s/order/order-postgres-depl.yaml
   - ./k8s/order/order-postgres-pv.yaml
   - ./k8s/order/order-secret.yaml
+  - ./k8s/expiration/expiration-config.yaml
+  - ./k8s/expiration/expiration-depl.yaml
+  - ./k8s/expiration/expiration-redis-depl.yaml
