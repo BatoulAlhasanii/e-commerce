@@ -47,7 +47,7 @@ export class ProductsReservedListener extends BaseEventListener<IProductsReserve
         userId: order.userId,
         total: order.total,
         status: order.status,
-        createdAt: order.createdAt,
+        createdAt: order.createdAt.toISOString(),
       });
     } catch (err) {
       await queryRunner.rollbackTransaction();

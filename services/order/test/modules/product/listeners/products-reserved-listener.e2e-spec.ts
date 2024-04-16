@@ -85,7 +85,7 @@ describe('ProductsReservedListener', () => {
       userId: order.userId,
       total: order.total,
       status: order.status,
-      createdAt: order.createdAt,
+      createdAt: order.createdAt.toISOString(),
     });
   });
 });
