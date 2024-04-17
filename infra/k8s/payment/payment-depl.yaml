@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: e-commerce/payment
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: node-env
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: db-type
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: db-port
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: db-password
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: db-name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: common-secret
+                  key: jwt-key
+            - name: JWT_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: jwt-ttl
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-client-id
+            - name: KAFKA_BROKER
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: kafka-broker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-srv
+spec:
+  selector:
+    app: payment
+  ports:
+    - name: payment
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

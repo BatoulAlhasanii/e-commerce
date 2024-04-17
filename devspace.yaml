@@ -69,6 +69,14 @@ images:
     context: ./services/expiration
     rebuildStrategy: always
     skipPush: true
+  payment:
+    image: e-commerce/payment
+    tags:
+      - payment-service
+    dockerfile: ./services/payment/Dockerfile
+    context: ./services/payment
+    rebuildStrategy: always
+    skipPush: true
 # This is a list of `dev` containers that are based on the containers created by your deployments
 dev:
   user:
@@ -106,6 +114,13 @@ dev:
       lastLines: 100
     sync:
       - path: ./services/expiration:/app
+  payment:
+    imageSelector: e-commerce/payment
+    logs:
+      enabled: true
+      lastLines: 100
+    sync:
+      - path: ./services/payment:/app
 # Use the `commands` section to define repeatable dev workflows for this project
 commands:
   migrate-db:

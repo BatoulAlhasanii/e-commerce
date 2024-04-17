@@ -27,3 +27,8 @@ resources:
   - ./k8s/expiration/expiration-config.yaml
   - ./k8s/expiration/expiration-depl.yaml
   - ./k8s/expiration/expiration-redis-depl.yaml
+  - ./k8s/payment/payment-config.yaml
+  - ./k8s/payment/payment-depl.yaml
+  - ./k8s/payment/payment-postgres-depl.yaml
+  - ./k8s/payment/payment-postgres-pv.yaml
+  - ./k8s/payment/payment-secret.yaml

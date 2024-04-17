@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+data:
+  db-type: postgres
+  db-host: payment-postgres-srv
+  db-port: '5432'
+  db-username: root
+  db-name: payment
