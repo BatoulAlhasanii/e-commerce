@@ -1,6 +1,6 @@
 export enum OrderStatus {
   Pending = 'pending',
   Canceled = 'canceled',
-  Overdue = 'overdue',
+  PaymentTimeout = 'payment_timeout',
   Paid = 'paid',
 }

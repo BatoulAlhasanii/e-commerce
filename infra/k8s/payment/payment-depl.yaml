@@ -73,6 +73,11 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: kafka-broker
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: stripe-key
 ---
 apiVersion: v1
 kind: Service

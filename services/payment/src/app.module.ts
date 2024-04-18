@@ -8,8 +8,8 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from '@/exception/http-exception.filter';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MessageBrokerModule } from '@/modules/message-broker/message-broker.module';
-import {OrderModule} from "@/modules/order/order.module";
-import {PaymentModule} from "@/modules/payment/payment.module";
+import { OrderModule } from '@/modules/order/order.module';
+import { PaymentModule } from '@/modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import {PaymentModule} from "@/modules/payment/payment.module";
     MessageBrokerModule,
     AuthModule,
     OrderModule,
-    PaymentModule
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

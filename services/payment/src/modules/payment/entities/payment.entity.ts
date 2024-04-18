@@ -1,16 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryColumn,
-  UpdateDateColumn,
-  VersionColumn
-} from 'typeorm';
-import { OrderStatus } from '@/modules/order/enums/order-status.enum';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Payment {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid' })
@@ -18,9 +10,6 @@ export class Payment {
 
   @Column({ type: 'uuid' })
   stripeId: string;
-
-  @VersionColumn()
-  version: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

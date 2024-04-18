@@ -5,6 +5,8 @@ import { ValidationException } from '@/exception/validation.exception';
 import { MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { MockKafkaWrapper } from '@/modules/message-broker/mocks/mock-kafka-wrapper';
 import { AppModule } from '@/app.module';
+import { StripeService } from '@/modules/payment/stripe.service';
+import { MockStripeService } from '@/modules/payment/mocks/mock-stripe.service';
 
 export class AppFactory {
   private constructor(
@@ -21,7 +23,9 @@ export class AppFactory {
       imports: [AppModule],
     })
       .overrideProvider(MESSAGE_BROKER)
-      .useClass(MockKafkaWrapper);
+      .useClass(MockKafkaWrapper)
+      .overrideProvider(StripeService)
+      .useClass(MockStripeService);
 
     const module: TestingModule = await moduleBuilder.compile();
 
