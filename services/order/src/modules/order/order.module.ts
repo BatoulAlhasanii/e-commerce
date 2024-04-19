@@ -10,10 +10,12 @@ import { ListenerRegistrar } from '@/modules/order/events/listener-registrar';
 import { BaseEventPublisher } from '@/modules/message-broker/events/publishers/base-event.publisher';
 import { OrderCreatedPublisher } from '@/modules/order/events/publishers/order-created.publisher';
 import { ProductRepository } from '@/modules/product/repositories/product.repository';
+import { OrderUpdatedPublisher } from '@/modules/order/events/publishers/order-updated.publisher';
+import { OrderExpirationTimeReachedListener } from '@/modules/order/events/listeneres/order-expiration-time-reached.listener';
 
-const publishers: (new (...args) => BaseEventPublisher<IEvent>)[] = [OrderCreatedPublisher];
+const publishers: (new (...args) => BaseEventPublisher<IEvent>)[] = [OrderCreatedPublisher, OrderUpdatedPublisher];
 
-const listeners: (new (...args) => BaseEventListener<IEvent>)[] = [ProductsReservedListener];
+const listeners: (new (...args) => BaseEventListener<IEvent>)[] = [ProductsReservedListener, OrderExpirationTimeReachedListener];
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderRepository, OrderItemRepository, ProductRepository]), MessageBrokerModule],

@@ -71,12 +71,12 @@ describe('ProductsReservedListener', () => {
 
     const order: Order = await orderRepository.findOneBy({ userId });
 
-    const publisher: jest.Mock = messageBroker.publish as jest.Mock;
-
     expect(order.total).toEqual(
       products[0].price * data.items[0].quantity + products[1].price * data.items[1].quantity + products[2].price * data.items[2].quantity,
     );
     expect(order.status).toBe(OrderStatus.Pending);
+
+    const publisher: jest.Mock = messageBroker.publish as jest.Mock;
 
     expect(messageBroker.publish).toHaveBeenCalledTimes(1);
     expect(publisher.mock.calls[0][0]).toBe(Subjects.OrderCreated);

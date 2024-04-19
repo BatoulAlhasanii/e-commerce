@@ -3,6 +3,7 @@ export enum Subjects {
   ProductUpdated = 'product.updated',
   ProductDeleted = 'product.deleted',
   ProductsReserved = 'products.reserved',
-  ProductsReservationFailed = 'products.reservation_failed',
   OrderCreated = 'order.created',
+  OrderUpdated = 'order.updated',
+  OrderExpirationTimeReached = 'order.expiration_time_reached',
 }
