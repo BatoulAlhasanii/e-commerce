@@ -8,19 +8,20 @@ import { OrderStatus } from '@/modules/order/enums/order-status.enum';
 import { orderDefinition } from '@/database/factories/order.factory';
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
+import { PaymentDoneListener } from '@/modules/order/events/listeneres/payment-done.listener';
 
-describe('OrderExpirationTimeReachedListener', () => {
+describe('PaymentDoneListener', () => {
   let app: AppFactory;
   let orderRepository: OrderRepository;
   let messageBroker: IMessageBroker;
-  let orderExpirationTimeReachedListener: OrderExpirationTimeReachedListener;
+  let paymentDoneListener: PaymentDoneListener;
 
   beforeAll(async () => {
     app = await AppFactory.new();
 
     orderRepository = app.instance.get(OrderRepository);
 
-    orderExpirationTimeReachedListener = app.instance.get(OrderExpirationTimeReachedListener);
+    paymentDoneListener = app.instance.get(PaymentDoneListener);
 
     messageBroker = app.instance.get(MESSAGE_BROKER);
   });
@@ -35,26 +36,26 @@ describe('OrderExpirationTimeReachedListener', () => {
     await app.close();
   });
 
-  it('tests updating order when expiration time is reached successfully', async () => {
+  it('tests updating order successfully when payment is done successfully', async () => {
     const order: Order = await Factory.create(orderRepository, orderDefinition);
 
     const data: IOrderExpirationTimeReached['data'] = {
       orderId: order.id,
     };
 
-    await orderExpirationTimeReachedListener.handle(data);
+    await paymentDoneListener.handle(data);
 
     const storedOrder: Order = await orderRepository.findOneBy({
       id: order.id,
     });
 
-    expect(storedOrder.status).toBe(OrderStatus.PaymentTimeout);
+    expect(storedOrder.status).toBe(OrderStatus.Paid);
     expect(storedOrder.version).toEqual(2);
 
     const publisher: jest.Mock = messageBroker.publish as jest.Mock;
 
     expect(messageBroker.publish).toHaveBeenCalledTimes(1);
-    expect(publisher.mock.calls[0][0]).toBe(Subjects.OrderUpdated);
+    expect(publisher.mock.calls[0][0]).toBe(Subjects.PaymentDone);
     expect(publisher.mock.calls[0][1]).toMatchObject({
       id: storedOrder.id,
       status: storedOrder.status,

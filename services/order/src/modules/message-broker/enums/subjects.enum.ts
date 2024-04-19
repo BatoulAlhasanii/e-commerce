@@ -6,4 +6,5 @@ export enum Subjects {
   OrderCreated = 'order.created',
   OrderUpdated = 'order.updated',
   OrderExpirationTimeReached = 'order.expiration_time_reached',
+  PaymentDone = 'payment.done',
 }

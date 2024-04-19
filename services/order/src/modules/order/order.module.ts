@@ -12,10 +12,11 @@ import { OrderCreatedPublisher } from '@/modules/order/events/publishers/order-c
 import { ProductRepository } from '@/modules/product/repositories/product.repository';
 import { OrderUpdatedPublisher } from '@/modules/order/events/publishers/order-updated.publisher';
 import { OrderExpirationTimeReachedListener } from '@/modules/order/events/listeneres/order-expiration-time-reached.listener';
+import { PaymentDoneListener } from '@/modules/order/events/listeneres/payment-done.listener';
 
 const publishers: (new (...args) => BaseEventPublisher<IEvent>)[] = [OrderCreatedPublisher, OrderUpdatedPublisher];
 
-const listeners: (new (...args) => BaseEventListener<IEvent>)[] = [ProductsReservedListener, OrderExpirationTimeReachedListener];
+const listeners: (new (...args) => BaseEventListener<IEvent>)[] = [ProductsReservedListener, OrderExpirationTimeReachedListener, PaymentDoneListener];
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderRepository, OrderItemRepository, ProductRepository]), MessageBrokerModule],
