@@ -31,6 +31,7 @@ export class OrderCreatedListener extends BaseEventListener<IOrderCreated> {
 
     order = await this.orderRepository.save(order);
 
+    //TODO: fire order created domain event, and have listener inside payment module to create payment
     const paymentIntent = await this.stripeService.createPaymentIntent(order.total);
 
     await this.paymentRepository.create({ orderId: order.id, stripeId: paymentIntent.id });
