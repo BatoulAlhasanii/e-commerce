@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Order } from '@/modules/order/entities/order.entity';
+import { Product } from '@/modules/product/entities/product.entity';
 
 @Entity()
 export class OrderItem {
@@ -8,6 +9,12 @@ export class OrderItem {
 
   @Column()
   productId: string;
+
+  @ManyToOne(() => Product, (product: Product) => product.orderItems, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'productId' })
+  product: Product;
 
   @Column({ type: 'integer', unsigned: true })
   quantity: number;

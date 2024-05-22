@@ -13,6 +13,7 @@ import { ProductRepository } from '@/modules/product/repositories/product.reposi
 import { OrderUpdatedPublisher } from '@/modules/order/events/publishers/order-updated.publisher';
 import { OrderExpirationTimeReachedListener } from '@/modules/order/events/listeneres/order-expiration-time-reached.listener';
 import { PaymentDoneListener } from '@/modules/order/events/listeneres/payment-done.listener';
+import { OrderService } from '@/modules/order/order.service';
 
 const publishers: (new (...args) => BaseEventPublisher<IEvent>)[] = [OrderCreatedPublisher, OrderUpdatedPublisher];
 
@@ -20,6 +21,6 @@ const listeners: (new (...args) => BaseEventListener<IEvent>)[] = [ProductsReser
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderRepository, OrderItemRepository, ProductRepository]), MessageBrokerModule],
-  providers: [...publishers, ...listeners, ListenerRegistrar],
+  providers: [OrderService, ...publishers, ...listeners, ListenerRegistrar],
 })
 export class OrderModule {}

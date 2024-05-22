@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { OrderItem } from '@/modules/order/entities/order-item.entity';
 
 @Entity()
 export class Product {
@@ -10,6 +11,9 @@ export class Product {
 
   @Column({ type: 'float' })
   price: number;
+
+  @OneToMany(() => OrderItem, (orderItem: OrderItem) => orderItem.product)
+  orderItems: OrderItem[];
 
   @VersionColumn()
   version: number;
