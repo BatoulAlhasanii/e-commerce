@@ -8,6 +8,10 @@ import { OrderStatus } from '@/modules/order/enums/order-status.enum';
 import { orderDefinition } from '@/database/factories/order.factory';
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
+import { OrderItem } from '@/modules/order/entities/order-item.entity';
+import { orderItemDefinition } from '@/database/factories/order-item.factory';
+import { OrderItemRepository } from '@/modules/order/repositories/order-item.repository';
+import { IOrderItem } from '@/modules/message-broker/interfaces/order-updated.interface';
 
 describe('OrderExpirationTimeReachedListener', () => {
   let app: AppFactory;
@@ -38,6 +42,8 @@ describe('OrderExpirationTimeReachedListener', () => {
   it('tests updating order successfully when expiration time is reached', async () => {
     const order: Order = await Factory.create(orderRepository, orderDefinition);
 
+    const orderItems: OrderItem[] = await Factory.create(OrderItemRepository, orderItemDefinition, { orderId: order.id });
+
     const data: IOrderExpirationTimeReached['data'] = {
       orderId: order.id,
     };
@@ -58,6 +64,7 @@ describe('OrderExpirationTimeReachedListener', () => {
     expect(publisher.mock.calls[0][1]).toMatchObject({
       id: storedOrder.id,
       status: storedOrder.status,
+      items: orderItems.map((item: OrderItem): IOrderItem => ({ productId: item.productId, quantity: item.quantity })),
       version: storedOrder.version,
     });
   });

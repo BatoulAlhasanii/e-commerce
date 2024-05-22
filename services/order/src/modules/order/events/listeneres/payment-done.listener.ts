@@ -5,6 +5,8 @@ import { Order } from '@/modules/order/entities/order.entity';
 import { OrderStatus } from '@/modules/order/enums/order-status.enum';
 import { OrderRepository } from '@/modules/order/repositories/order.repository';
 import { OrderUpdatedPublisher } from '@/modules/order/events/publishers/order-updated.publisher';
+import { OrderItem } from '@/modules/order/entities/order-item.entity';
+import { IOrderItem } from '@/modules/message-broker/interfaces/order-updated.interface';
 
 export class PaymentDoneListener extends BaseEventListener<IPaymentDone> {
   subject: Subjects.PaymentDone = Subjects.PaymentDone;
@@ -24,18 +26,21 @@ export class PaymentDoneListener extends BaseEventListener<IPaymentDone> {
     }
 
     if (order.status == OrderStatus.PaymentTimeout) {
-      //publish event to refund payment
+      //TODO: publish event to refund payment
       return;
     }
 
     await this.orderRepository.update(order.id, { status: OrderStatus.Paid });
 
-    order = await this.orderRepository.findOneBy({ id: order.id });
+    order = await this.orderRepository.findOne({
+      where: { id: order.id },
+      relations: ['items'],
+    });
 
-    //TODO: send items
     await this.orderUpdatedPublisher.publish({
       id: order.id,
       status: order.status,
+      items: order.items.map((item: OrderItem): IOrderItem => ({ productId: item.productId, quantity: item.quantity })),
       version: order.version,
     });
   }

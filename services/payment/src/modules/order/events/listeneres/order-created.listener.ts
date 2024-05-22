@@ -5,8 +5,6 @@ import { OrderRepository } from '@/modules/order/repositories/order.repository';
 import { IOrderCreated } from '@/modules/message-broker/interfaces/order-created.interface';
 import { StripeService } from '@/modules/payment/stripe.service';
 import { PaymentRepository } from '@/modules/payment/repositories/payment.repository';
-import { OmitType } from '@nestjs/mapped-types';
-import { OrderStatus } from '@/modules/order/enums/order-status.enum';
 import { Order } from '@/modules/order/entities/order.entity';
 
 @Injectable()
@@ -36,6 +34,6 @@ export class OrderCreatedListener extends BaseEventListener<IOrderCreated> {
 
     await this.paymentRepository.create({ orderId: order.id, stripeId: paymentIntent.id });
 
-    //send notification to user through Firebase containing orderId and stripeId
+    //TODO: send notification to user through Firebase containing orderId and stripeId
   }
 }

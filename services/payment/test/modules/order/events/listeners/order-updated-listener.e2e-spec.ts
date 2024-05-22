@@ -37,6 +37,7 @@ describe('OrderUpdatedListener', () => {
     const data: IOrderUpdated['data'] = {
       id: order.id,
       status: faker.helpers.arrayElement([OrderStatus.Canceled, OrderStatus.Paid]),
+      items: [{ productId: faker.string.uuid(), quantity: faker.number.int({ min: 1, max: 3 }) }],
       version: order.version + 1,
     };
 
