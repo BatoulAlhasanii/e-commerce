@@ -38,7 +38,7 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
       itemAvailabilityGroups = this.groupItemsByAvailability(data.items, storedProductsMap);
 
       if (data.items.length == itemAvailabilityGroups.availableItems.length) {
-        await this.updateProductsStock(data.items, storedProductsMap, queryRunner);
+        await this.updateProductsStock(data.items, queryRunner);
       } else {
         throw new Error('Not all items are available');
       }
@@ -52,6 +52,7 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
+      //TODO: check error type before publishing event
       await this.productsReservationFailedPublisher.publish({
         userId: data.userId,
         itemAvailabilityGroups: itemAvailabilityGroups,
@@ -114,15 +115,12 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
 
   private async updateProductsStock(
     items: ICheckedOutCartItem[],
-    storedProductsMap: { [productId: string]: Product },
     queryRunner: QueryRunner,
   ): Promise<void> {
     for (const item of items) {
-      const product: Product = storedProductsMap[item.productId];
-
       await queryRunner.manager.update(
         Product,
-        { id: product.id },
+        { id: item.productId },
         {
           stock: () => `stock - ${item.quantity}`,
           reservedQuantity: () => `reservedQuantity + ${item.quantity}`,
