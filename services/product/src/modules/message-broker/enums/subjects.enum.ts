@@ -6,4 +6,5 @@ export enum Subjects {
   ProductsReservationFailed = 'products.reservation_failed',
 
   CartCheckedOut = 'cart.checked_out',
+  OrderUpdated = 'order.updated',
 }

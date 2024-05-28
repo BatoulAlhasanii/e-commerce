@@ -1,4 +1,3 @@
-import { AppFactory } from './factories/app';
 import { ProductRepository } from '@/modules/product/repositories/product.repository';
 import { Product } from '@/modules/product/entities/product.entity';
 import { Factory } from '@/database/factories/factory';
@@ -8,6 +7,7 @@ import { CartCheckedOutListener } from '@/modules/product/events/listeners/cart-
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
 import { ICartCheckedOut } from '@/modules/message-broker/interfaces/cart-checked-out.interface';
 import { faker } from '@faker-js/faker';
+import {AppFactory} from "../../../factories/app";
 
 describe('CartCheckedOutListener', () => {
   let app: AppFactory;

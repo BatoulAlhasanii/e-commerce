@@ -1,5 +1,4 @@
 import * as request from 'supertest';
-import { AppFactory } from './factories/app';
 import { ProductRepository } from '@/modules/product/repositories/product.repository';
 import { Product } from '@/modules/product/entities/product.entity';
 import { Factory } from '@/database/factories/factory';
@@ -10,6 +9,7 @@ import { AuthUserPayload } from '@/modules/auth/types';
 import { UserRole } from '@/modules/auth/enums/user-role.enum';
 import { IMessageBroker, MESSAGE_BROKER } from '@/modules/message-broker/interfaces/message-broker.interface';
 import { Subjects } from '@/modules/message-broker/enums/subjects.enum';
+import {AppFactory} from "../../factories/app";
 
 describe('ProductController (e2e)', () => {
   const endpoint: string = '/products';
