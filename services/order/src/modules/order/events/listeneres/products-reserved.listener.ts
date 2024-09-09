@@ -32,23 +32,16 @@ export class ProductsReservedListener extends BaseEventListener<IProductsReserve
 
     const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
 
+    let order: Order;
     try {
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
-      const order: Order = await this.createOrder(queryRunner, data.userId, total);
+      order = await this.createOrder(queryRunner, data.userId, total);
 
       await this.createOrderItems(data.items, queryRunner, storedProductsMap, order);
 
       await queryRunner.commitTransaction();
-
-      await this.orderCreatedPublisher.publish({
-        id: order.id,
-        userId: order.userId,
-        total: order.total,
-        status: order.status,
-        createdAt: order.createdAt.toISOString(),
-      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
@@ -56,6 +49,14 @@ export class ProductsReservedListener extends BaseEventListener<IProductsReserve
     } finally {
       await queryRunner.release();
     }
+
+    await this.orderCreatedPublisher.publish({
+      id: order.id,
+      userId: order.userId,
+      total: order.total,
+      status: order.status,
+      createdAt: order.createdAt.toISOString(),
+    });
   }
 
   private async getStoredProducts(productIds: string[]) {

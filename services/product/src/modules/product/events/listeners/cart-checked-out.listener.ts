@@ -44,11 +44,6 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
       }
 
       await queryRunner.commitTransaction();
-
-      await this.productsReservedPublisher.publish({
-        userId: data.userId,
-        items: data.items,
-      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
@@ -57,9 +52,16 @@ export class CartCheckedOutListener extends BaseEventListener<ICartCheckedOut> {
         userId: data.userId,
         itemAvailabilityGroups: itemAvailabilityGroups,
       });
+
+      throw err;
     } finally {
       await queryRunner.release();
     }
+
+    await this.productsReservedPublisher.publish({
+      userId: data.userId,
+      items: data.items,
+    });
   }
 
   private async getStoredProducts(queryRunner: QueryRunner, productIds: string[]) {
